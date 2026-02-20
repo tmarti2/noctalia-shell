@@ -126,13 +126,19 @@ Item {
     suffix: "%"
     forceOpen: displayMode === "alwaysShow"
     forceClose: displayMode === "alwaysHide"
-    tooltipText: I18n.tr("tooltips.volume-at", {
-                           "volume": (() => {
-                                        const maxVolume = Settings.data.audio.volumeOverdrive ? 1.5 : 1.0;
-                                        const displayVolume = Math.min(maxVolume, AudioService.volume);
-                                        return Math.round(displayVolume * 100);
-                                      })()
-                         })
+    tooltipText: {
+      if (PanelService.getPanel("audioPanel", screen)?.isPanelOpen) {
+        return "";
+      } else {
+        I18n.tr("tooltips.volume-at", {
+                  "volume": (() => {
+                               const maxVolume = Settings.data.audio.volumeOverdrive ? 1.5 : 1.0;
+                               const displayVolume = Math.min(maxVolume, AudioService.volume);
+                               return Math.round(displayVolume * 100);
+                             })()
+                });
+      }
+    }
 
     onWheel: function (delta) {
       // Hide tooltip as soon as the user starts scrolling to adjust volume
@@ -150,6 +156,13 @@ Item {
         AudioService.decreaseVolume();
       }
     }
+
+    onEntered: {
+      if (Settings.data.bar.openOnHover) {
+        PanelService.getPanel("audioPanel", screen)?.open(this);
+      }
+    }
+
     onClicked: {
       PanelService.getPanel("audioPanel", screen)?.toggle(this);
     }
