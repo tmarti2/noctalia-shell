@@ -59,7 +59,13 @@ NIconButton {
   applyUiScale: false
   customRadius: Style.radiusL
   icon: NotificationService.doNotDisturb ? "bell-off" : "bell"
-  tooltipText: NotificationService.doNotDisturb ? I18n.tr("tooltips.open-notification-history-enable-dnd") : I18n.tr("tooltips.open-notification-history-enable-dnd")
+  tooltipText: {
+    if (Settings.data.bar.openOnHover || PanelService.getPanel("notificationHistoryPanel", screen)?.isPanelOpen) {
+      return "";
+    } else {
+      return I18n.tr("tooltips.open-notification-history-enable-dnd");
+    }
+  }
   tooltipDirection: BarService.getTooltipDirection(screen?.name)
   colorBg: Style.capsuleColor
   colorFg: Color.resolveColorKey(iconColorKey)
@@ -103,14 +109,15 @@ NIconButton {
                  }
   }
 
-  onClicked: {
-    var panel = PanelService.getPanel("notificationHistoryPanel", screen);
-    panel?.toggle(this);
+  onEntered: {
+    if (Settings.data.bar.openOnHover) {
+      PanelService.getPanel("notificationHistoryPanel", screen)?.open(this);
+    }
   }
 
-  onRightClicked: {
-    PanelService.showContextMenu(contextMenu, root, screen);
-  }
+  onClicked: PanelService.getPanel("notificationHistoryPanel", screen)?.toggle(this)
+
+  onRightClicked: PanelService.showContextMenu(contextMenu, root, screen)
 
   Loader {
     anchors.horizontalCenter: parent.horizontalCenter
