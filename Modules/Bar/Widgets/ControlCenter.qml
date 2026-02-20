@@ -49,7 +49,13 @@ NIconButton {
   // If we have a custom path and not using distro logo, use the theme icon.
   // If using distro logo, don't use theme icon.
   icon: (customIconPath === "" && !useDistroLogo) ? customIcon : ""
-  tooltipText: I18n.tr("tooltips.open-control-center")
+  tooltipText: {
+    if (Settings.data.bar.openOnHover || PanelService.getPanel("controlCenterPanel", screen)?.isPanelOpen) {
+      return "";
+    } else {
+      return I18n.tr("tooltips.open-control-center");
+    }
+  }
   tooltipDirection: BarService.getTooltipDirection(screen?.name)
   baseSize: Style.getCapsuleHeightForScreen(screen?.name)
   applyUiScale: false
@@ -98,6 +104,14 @@ NIconButton {
                  }
   }
 
+  onEntered: {
+    if (Settings.data.bar.openOnHover) {
+      var controlCenterPanel = PanelService.getPanel("controlCenterPanel", screen);
+      // Always open the panel next to the bar button in hover mode
+      controlCenterPanel?.open(this);
+    }
+  }
+
   onClicked: {
     var controlCenterPanel = PanelService.getPanel("controlCenterPanel", screen);
     if (Settings.data.controlCenter.position === "close_to_bar_button") {
@@ -107,9 +121,7 @@ NIconButton {
       controlCenterPanel?.toggle();
     }
   }
-  onRightClicked: {
-    PanelService.showContextMenu(contextMenu, root, screen);
-  }
+  onRightClicked: PanelService.showContextMenu(contextMenu, root, screen)
   onMiddleClicked: PanelService.toggleLauncher(screen)
 
   IconImage {
