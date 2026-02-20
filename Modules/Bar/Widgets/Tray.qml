@@ -243,7 +243,7 @@ Item {
     }
   }
 
-  function toggleDrawer(button) {
+  function prepareDrawer(button) {
     TooltipService.hideImmediately();
 
     // Close the popup menu if it's open
@@ -255,8 +255,16 @@ Item {
     if (panel) {
       panel.widgetSection = root.section;
       panel.widgetIndex = root.sectionWidgetIndex;
-      panel.toggle(this);
     }
+    return panel;
+  }
+
+  function toggleDrawer(button) {
+    prepareDrawer()?.toggle(this);
+  }
+
+  function openDrawer(button) {
+    prepareDrawer()?.open(this);
   }
 
   function onLoaded() {
@@ -349,7 +357,13 @@ Item {
       visible: root.drawerEnabled && dropdownItems.length > 0 && BarService.getPillDirection(root)
       width: isVertical ? barHeight : capsuleHeight
       height: isVertical ? capsuleHeight : barHeight
-      tooltipText: I18n.tr("tooltips.open-tray-dropdown")
+      tooltipText: {
+        if (Settings.data.bar.openOnHover || PanelService.getPanel("trayDrawerPanel", root.screen)?.isPanelOpen) {
+          return "";
+        } else {
+          return I18n.tr("tooltips.open-tray-dropdown");
+        }
+      }
       tooltipDirection: BarService.getTooltipDirection(root.screen?.name)
       baseSize: capsuleHeight
       applyUiScale: false
@@ -369,6 +383,12 @@ Item {
         case "top":
         default:
           return "caret-down";
+        }
+      }
+
+      onEntered: {
+        if (Settings.data.bar.openOnHover) {
+          openDrawer(this);
         }
       }
       onClicked: toggleDrawer(this)
@@ -565,6 +585,11 @@ Item {
         case "top":
         default:
           return "caret-down";
+        }
+      }
+      onEntered: {
+        if (Settings.data.bar.openOnHover) {
+          openDrawer(this);
         }
       }
       onClicked: toggleDrawer(this)
