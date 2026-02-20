@@ -37,7 +37,13 @@ NIconButton {
   applyUiScale: false
   customRadius: Style.radiusL
   icon: "wallpaper-selector"
-  tooltipText: I18n.tr("tooltips.wallpaper-selector")
+  tooltipText: {
+    if (Settings.data.bar.openOnHover || PanelService.getPanel("wallpaperPanel", screen)?.isPanelOpen) {
+      return "";
+    } else {
+      return I18n.tr("tooltips.wallpaper-selector");
+    }
+  }
   tooltipDirection: BarService.getTooltipDirection(screen?.name)
   colorBg: Style.capsuleColor
   colorFg: Color.resolveColorKey(iconColorKey)
@@ -70,6 +76,14 @@ NIconButton {
                      BarService.openWidgetSettings(screen, section, sectionWidgetIndex, widgetId, widgetSettings);
                    }
                  }
+  }
+
+  onEntered: {
+    if (Settings.data.bar.openOnHover) {
+      var wallpaperPanel = PanelService.getPanel("wallpaperPanel", screen);
+      // Always open the panel next to the bar button in hover mode
+      wallpaperPanel?.open(this);
+    }
   }
 
   onClicked: {
