@@ -24,6 +24,7 @@
     "autoHideDelay": 500,
     "autoShowDelay": 150,
     "showOnWorkspaceSwitch": true,
+    "openOnHover": false,
     "widgets": {
       "left": [
         {

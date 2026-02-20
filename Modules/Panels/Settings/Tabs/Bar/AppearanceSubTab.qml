@@ -125,6 +125,14 @@ ColumnLayout {
     onToggled: checked => Settings.data.bar.useSeparateOpacity = checked
   }
 
+  NToggle {
+    label: I18n.tr("panels.bar.appearance-display-panel-on-over-label")
+    description: I18n.tr("panels.bar.appearance-display-panel-on-over-description")
+    checked: Settings.data.bar.openOnHover
+    defaultValue: Settings.getDefaultValue("bar.openOnHover")
+    onToggled: checked => Settings.data.bar.openOnHover = checked
+  }
+
   NValueSlider {
     Layout.fillWidth: true
     visible: Settings.data.bar.useSeparateOpacity

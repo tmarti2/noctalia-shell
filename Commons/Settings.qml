@@ -206,6 +206,8 @@ Singleton {
       property int autoShowDelay: 150 // ms before showing when mouse enters
       property bool showOnWorkspaceSwitch: true // show bar briefly on workspace switch
 
+      property bool openOnHover: false
+
       // Widget configuration for modular bar system
       property JsonObject widgets
       widgets: JsonObject {
