@@ -101,15 +101,26 @@ Item {
     autoHide: false
     forceOpen: !isBarVertical && root.displayMode === "alwaysShow"
     forceClose: isBarVertical || root.displayMode === "alwaysHide" || text === ""
+
+    onEntered: {
+      if (Settings.data.bar.openOnHover) {
+        var panel = PanelService.getPanel("bluetoothPanel", screen);
+        panel?.open(this);
+      }
+    }
+
     onClicked: {
-      var p = PanelService.getPanel("bluetoothPanel", screen);
-      if (p)
-        p.toggle(this);
+      var panel = PanelService.getPanel("bluetoothPanel", screen);
+      panel?.toggle(this);
     }
     onRightClicked: {
       PanelService.showContextMenu(contextMenu, pill, screen);
     }
     tooltipText: {
+      var panel = PanelService.getPanel("bluetoothPanel", screen);
+      if (panel?.isPanelOpen) {
+        return "";
+      }
       if (pill.text !== "") {
         return pill.text;
       }
