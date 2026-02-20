@@ -34,7 +34,13 @@ NIconButton {
   readonly property color iconColor: Color.resolveColorKey(valueIconColor)
 
   icon: "settings"
-  tooltipText: !PanelService.getPanel("settingsPanel", screen)?.isPanelOpen ? I18n.tr("tooltips.open-settings") : ""
+  tooltipText: {
+    if (Settings.data.bar.openOnHover || PanelService.getPanel("settingsPanel", screen)?.isPanelOpen) {
+      return "";
+    } else {
+      return I18n.tr("tooltips.open-settings");
+    }
+  }
   tooltipDirection: BarService.getTooltipDirection(screen?.name)
   baseSize: Style.getCapsuleHeightForScreen(screen?.name)
   applyUiScale: false
@@ -65,6 +71,14 @@ NIconButton {
                      BarService.openWidgetSettings(screen, section, sectionWidgetIndex, widgetId, widgetSettings);
                    }
                  }
+  }
+
+  onEntered: {
+    if (Settings.data.bar.openOnHover) {
+      var controlCenterPanel = PanelService.getPanel("settingsPanel", screen);
+      // Always open the panel next to the bar button in hover mode
+      controlCenterPanel?.open(this);
+    }
   }
 
   onClicked: {
