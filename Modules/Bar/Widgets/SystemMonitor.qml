@@ -924,8 +924,13 @@ Item {
                  }
                }
     onEntered: {
-      TooltipService.show(root, buildTooltipContent(), BarService.getTooltipDirection(root.screen?.name));
-      tooltipRefreshTimer.start();
+      var panel = PanelService.getPanel("systemStatsPanel", screen);
+      if (Settings.data.bar.openOnHover) {
+        panel?.open(root);
+      } else if (!panel.isPanelOpen) {
+        TooltipService.show(root, buildTooltipContent(), BarService.getTooltipDirection(root.screen?.name));
+        tooltipRefreshTimer.start();
+      }
     }
     onExited: {
       tooltipRefreshTimer.stop();
