@@ -194,20 +194,23 @@ Item {
     acceptedButtons: Qt.LeftButton | Qt.RightButton
     cursorShape: Qt.PointingHandCursor
     onEntered: {
-      if (root.tooltipContent) {
+      if (Settings.data.bar.openOnHover) {
+        openBatteryPanel();
+      } else if (!getBatteryPanel()?.isPanelOpen && root.tooltipContent) {
         TooltipService.show(root, root.tooltipContent, BarService.getTooltipDirection(root.screen?.name));
+        tooltipRefreshTimer.start();
       }
-      tooltipRefreshTimer.start();
     }
     onExited: {
       tooltipRefreshTimer.stop();
       TooltipService.hide();
     }
     onClicked: mouse => {
+                 TooltipService.hide();
                  if (mouse.button === Qt.RightButton) {
                    PanelService.showContextMenu(contextMenu, nBattery, screen);
                  } else {
-                   openBatteryPanel();
+                   toggleBatteryPanel();
                  }
                }
   }
@@ -238,22 +241,34 @@ Item {
     forceClose: root.displayMode === "icon-only" || !root.isReady
     customBackgroundColor: root.isCharging ? Color.mPrimary : ((root.isLowBattery || root.isCriticalBattery) ? Color.mError : "transparent")
     customTextIconColor: root.isCharging ? Color.mOnPrimary : ((root.isLowBattery || root.isCriticalBattery) ? Color.mOnError : "transparent")
-    tooltipText: root.tooltipContent
-
-    onClicked: openBatteryPanel()
+    tooltipText: !getBatteryPanel()?.isPanelOpen ? root.tooltipContent : ""
+    onEntered: {
+      if (Settings.data.bar.openOnHover) {
+        openBatteryPanel();
+      }
+    }
+    onClicked: toggleBatteryPanel()
     onRightClicked: PanelService.showContextMenu(contextMenu, pill, screen)
   }
 
   // ==================== SHARED ====================
 
-  function openBatteryPanel() {
+  function getBatteryPanel() {
     var panel = PanelService.getPanel("batteryPanel", screen);
     if (panel) {
       panel.panelID = {
         showPowerProfiles: widgetSettings.showPowerProfiles !== undefined ? widgetSettings.showPowerProfiles : widgetMetadata.showPowerProfiles,
         showNoctaliaPerformance: widgetSettings.showNoctaliaPerformance !== undefined ? widgetSettings.showNoctaliaPerformance : widgetMetadata.showNoctaliaPerformance
       };
-      panel.toggle(root);
     }
+    return panel;
+  }
+
+  function toggleBatteryPanel() {
+    getBatteryPanel()?.toggle(root);
+  }
+
+  function openBatteryPanel() {
+    getBatteryPanel()?.open(root);
   }
 }
