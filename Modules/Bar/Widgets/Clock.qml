@@ -181,7 +181,10 @@ Item {
     hoverEnabled: true
     acceptedButtons: Qt.LeftButton | Qt.RightButton
     onEntered: {
-      if (!PanelService.getPanel("clockPanel", screen)?.isPanelOpen) {
+      var panel = PanelService.getPanel("clockPanel", screen);
+      if (Settings.data.bar.openOnHover) {
+        panel.open(this);
+      } else if (!panel?.isPanelOpen) {
         TooltipService.show(root, buildTooltipText(), BarService.getTooltipDirection(root.screen?.name));
         tooltipRefreshTimer.start();
       }
