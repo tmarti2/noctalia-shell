@@ -123,6 +123,12 @@ Item {
     autoHide: false
     forceOpen: !isBarVertical && root.displayMode === "alwaysShow"
     forceClose: isBarVertical || root.displayMode === "alwaysHide" || text === ""
+    onEntered: {
+      if (Settings.data.bar.openOnHover) {
+        var panel = PanelService.getPanel("networkPanel", screen);
+        panel?.open(this);
+      }
+    }
     onClicked: {
       var panel = PanelService.getPanel("networkPanel", screen);
       panel?.toggle(this);
@@ -131,6 +137,10 @@ Item {
       PanelService.showContextMenu(contextMenu, pill, screen);
     }
     tooltipText: {
+      var panel = PanelService.getPanel("networkPanel", screen);
+      if (panel?.isPanelOpen) {
+        return "";
+      }
       try {
         if (NetworkService.ethernetConnected) {
           const d = NetworkService.activeEthernetDetails || ({});
