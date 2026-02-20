@@ -54,6 +54,9 @@ Singleton {
     function showBar() {
       BarService.show();
     }
+    function onHover() {
+      Settings.data.bar.openOnHover = !Settings.data.bar.openOnHover;
+    }
     function setDisplayMode(mode: string, screen: string) {
       if (mode === "always_visible" || mode === "non_exclusive" || mode === "auto_hide") {
         if (!screen || screen === "all") {
