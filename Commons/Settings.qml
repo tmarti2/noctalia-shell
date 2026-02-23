@@ -321,6 +321,8 @@ Singleton {
       property bool boxBorderEnabled: false
       property real panelBackgroundOpacity: 0.93
       property bool panelsAttachedToBar: true
+      property bool panelsAutoHide: false
+      property int panelsHideDelay: 500
       property string settingsPanelMode: "attached" // "centered", "attached", "window"
       property bool settingsPanelSideBarCardStyle: false
     }

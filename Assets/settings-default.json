@@ -141,6 +141,8 @@
     "boxBorderEnabled": false,
     "panelBackgroundOpacity": 0.93,
     "panelsAttachedToBar": true,
+    "panelsAutoHide": false,
+    "panelsHideDelay": 500,
     "settingsPanelMode": "attached",
     "settingsPanelSideBarCardStyle": false
   },

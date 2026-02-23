@@ -55,6 +55,30 @@ ColumnLayout {
     text: Math.floor(Settings.data.general.dimmerOpacity * 100) + "%"
   }
 
+  NToggle {
+    Layout.fillWidth: true
+    label: I18n.tr("panels.user-interface.panels-auto-hide-label")
+    description: I18n.tr("panels.user-interface.panels-auto-hide-description")
+    checked: Settings.data.ui.panelsAutoHide
+    defaultValue: Settings.getDefaultValue("ui.panelsAutoHide")
+    onToggled: checked => Settings.data.ui.panelsAutoHide = checked
+  }
+
+  NValueSlider {
+    Layout.fillWidth: true
+    visible: Settings.data.ui.panelsAutoHide
+    label: I18n.tr("panels.user-interface.panels-auto-hide-delay-label")
+    description: I18n.tr("panels.user-interface.panels-auto-hide-delay-description")
+    from: 100
+    to: 2000
+    stepSize: 100
+    showReset: true
+    value: Settings.data.ui.panelsHideDelay
+    defaultValue: Settings.getDefaultValue("ui.panelsHideDelay")
+    onMoved: value => Settings.data.ui.panelsHideDelay = value
+    text: Settings.data.ui.panelsHideDelay + "ms"
+  }
+
   NDivider {
     Layout.fillWidth: true
   }
