@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import qs.Commons
 import qs.Services.System
 import qs.Widgets
+import qs.Services.UI
 
 Item {
   id: root
@@ -75,6 +76,7 @@ Item {
       } else {
         resumeTimer.start();
       }
+      PanelService.childrenHovered(hovered);
     }
   }
 
